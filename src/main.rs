@@ -8,17 +8,21 @@ use std::time::Instant;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    /// Number of UUIDs to generate
+    // Number of UUIDs to generate
     #[arg(short, long, default_value_t = 1, help = "Specify the number of UUIDs to generate")]
     count: u32,
 
-    /// Format of the UUIDs
+    // Format of the UUIDs
     #[arg(short, long, default_value = "b", help = "Set the format of the UUIDs ('u' for bare, 'ul' for bare w. comma, 'q' for quoted, 'ql' for quoted w. comma)")]
     format: String,
 
-    /// Output file
+    // Output file
     #[arg(short, long, help = "Specify an output file. Prints to stdout if not set")]
     output: Option<String>,
+
+    // Measure and display time taken to generate UUIDs
+    #[arg(long, help = "Display the time taken to generate UUIDs")]
+    time: bool,
 }
 
 fn main() -> io::Result<()> {
@@ -54,7 +58,9 @@ fn main() -> io::Result<()> {
     }
 
     let duration = start.elapsed();
-    println!("Time elapsed for UUID geneartion is: {:?}", duration);
+    if args.time {
+        println!("Time elapsed for UUID generation is: {:?}", duration);
+    }
 
     Ok(())
 }
