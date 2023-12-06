@@ -1,0 +1,23 @@
+[package]
+name = "uuid-gen-gui"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+
+[profile.dev]
+debug = true
+
+[dependencies]
+clap = { version = "4.4.11", features = ["derive"] }
+rayon = "1.8.0"
+
+[dependencies.uuid]
+version = "1.6.1"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]
