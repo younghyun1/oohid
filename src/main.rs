@@ -13,7 +13,7 @@ struct Args {
     count: u32,
 
     // Format of the UUIDs
-    #[arg(short, long, default_value = "b", help = "Set the format of the UUIDs ('u' for bare, 'ul' for bare w. comma, 'q' for quoted, 'ql' for quoted w. comma, 'qlb' for [] brackets, 'qlbl' for {} brackets)")]
+    #[arg(short, long, default_value = "u", help = "Set the format of the UUIDs ('u' for bare, 'ul' for bare w. comma, 'q' for quoted, 'ql' for quoted w. comma, 'qlb' for [] brackets, 'qlbl' for {} brackets)")]
     format: String,
 
     // Output file
@@ -34,19 +34,22 @@ fn main() -> io::Result<()> {
     let formatted_uuids: Vec<String> = (0..num_ids)
         .into_par_iter()
         .map(|_| Uuid::new_v4())
-        .map(|uuid| match args.format.as_str() {
-            "u" => uuid.to_string(),
-            "ul" => format!("{},", uuid),
-            "q" => format!("\"{}\"", uuid),
-            "ql" => format!("\"{}\",", uuid),
-            _ => uuid.to_string(),
+        .map(|uuid| {
+            let base_format = uuid.to_string();
+            match args.format.as_str() {
+                "u" => base_format,
+                "ul" => format!("{},", base_format),
+                "q" => format!("\"{}\"", base_format),
+                "ql" | "qlb" | "qlbl" => format!("\"{}\",", base_format),
+                _ => base_format,
+            }
         })
         .collect();
 
     let output_content = match args.format.as_str() {
-        "qlb" => format!("[\n{}\n]", formatted_uuids.join("\n\t")),
-        "qlbl" => format!("{{\n{}\n}}", formatted_uuids.join("\n\t")),
-        _ => formatted_uuids.join("\n"),
+        "qlb" => format!("[\n\t{}\n]", formatted_uuids.join("\n\t")),
+        "qlbl" => format!("{{\n\t{}\n}}", formatted_uuids.join("\n\t")),
+        _ => formatted_uuids.join("\n").trim_end_matches(',').to_owned(),
     };
 
     match args.output {
