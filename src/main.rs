@@ -13,7 +13,7 @@ struct Args {
     count: u32,
 
     // Format of the UUIDs
-    #[arg(short, long, default_value = "b", help = "Set the format of the UUIDs ('u' for bare, 'ul' for bare w. comma, 'q' for quoted, 'ql' for quoted w. comma)")]
+    #[arg(short, long, default_value = "b", help = "Set the format of the UUIDs ('u' for bare, 'ul' for bare w. comma, 'q' for quoted, 'ql' for quoted w. comma, 'qlb' for [] brackets, 'qlbl' for {} brackets)")]
     format: String,
 
     // Output file
@@ -43,22 +43,24 @@ fn main() -> io::Result<()> {
         })
         .collect();
 
+    let output_content = match args.format.as_str() {
+        "qlb" => format!("[\n{}\n]", formatted_uuids.join("\n\t")),
+        "qlbl" => format!("{{\n{}\n}}", formatted_uuids.join("\n\t")),
+        _ => formatted_uuids.join("\n"),
+    };
+
     match args.output {
         Some(file_name) => {
             let mut file = File::create(file_name)?;
-            for formatted_uuid in formatted_uuids {
-                writeln!(file, "{}", formatted_uuid)?;
-            }
+            writeln!(file, "{}", output_content)?;
         }
         None => {
-            for formatted_uuid in formatted_uuids {
-                println!("{}", formatted_uuid);
-            }
+            println!("{}", output_content);
         }
     }
 
-    let duration = start.elapsed();
     if args.time {
+        let duration = start.elapsed();
         println!("Time elapsed for UUID generation is: {:?}", duration);
     }
 
