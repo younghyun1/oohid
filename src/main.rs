@@ -54,7 +54,7 @@ fn main() -> io::Result<()> {
     }
 
     let duration = start.elapsed();
-    println!("Time elapsed in expensive_function() is: {:?}", duration);
+    println!("Time elapsed for UUID geneartion is: {:?}", duration);
 
     Ok(())
 }
