@@ -8,11 +8,16 @@ use std::time::Instant;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, default_value_t = 1)]
+    /// Number of UUIDs to generate
+    #[arg(short, long, default_value_t = 1, help = "Specify the number of UUIDs to generate")]
     count: u32,
-    #[arg(short, long, default_value = "b")]
+
+    /// Format of the UUIDs
+    #[arg(short, long, default_value = "b", help = "Set the format of the UUIDs ('u' for bare, 'ul' for bare w. comma, 'q' for quoted, 'ql' for quoted w. comma)")]
     format: String,
-    #[arg(short, long)]
+
+    /// Output file
+    #[arg(short, long, help = "Specify an output file. Prints to stdout if not set")]
     output: Option<String>,
 }
 
@@ -26,9 +31,10 @@ fn main() -> io::Result<()> {
         .into_par_iter()
         .map(|_| Uuid::new_v4())
         .map(|uuid| match args.format.as_str() {
-            "b" => uuid.to_string(),
+            "u" => uuid.to_string(),
+            "ul" => format!("{},", uuid),
             "q" => format!("\"{}\"", uuid),
-            "l" => format!("\"{}\",", uuid),
+            "ql" => format!("\"{}\",", uuid),
             _ => uuid.to_string(),
         })
         .collect();
@@ -49,6 +55,6 @@ fn main() -> io::Result<()> {
 
     let duration = start.elapsed();
     println!("Time elapsed in expensive_function() is: {:?}", duration);
-    
+
     Ok(())
 }
