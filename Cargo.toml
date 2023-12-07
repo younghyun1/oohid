@@ -1,7 +1,12 @@
 [package]
-name = "uuid-gen-gui"
-version = "0.1.0"
+name = "oohid"
+version = "1.0.0"
 edition = "2021"
+license-file = "LICENSE"
+description = "Generates UUIDs on CLI in various formats, very fast, outputs to .txt or stdout."
+homepage = "https://www.linkedin.com/in/younghyun-chi-a60b59a9/"
+repository = "https://github.com/younghyun1/uuid-gen-gui"
+readme = "README.md"
 
 [profile.release]
 opt-level = 3
