@@ -32,33 +32,43 @@ Generate 5 UUIDs:
 ```
 oohid --count 5
 ```
-
+or
+```
+oohid -c 5
+```
 ### Specifying Format
 Specify a custom format for the UUIDs (`ul` for bare with comma, `q` for quoted, etc.):
 
 ```
 oohid --count 5 --format ul
 ```
-
+or
+```
+oohid -c 5 -f ul
+```
 ### Output to a File
 Direct the output to a file:
 
 ```
 oohid --count 10 --output uuids.txt
 ```
+or
+```
+oohid -c 10 -o uuids.txt
+```
 
 ### Checking for Duplicates
 Check and remove duplicate UUIDs:
 
 ```
-oohid --count 100 --check
+oohid -c 100 --check
 ```
 
 ### Verbose Output
 Display benchmarking and checking results:
 
 ```
-oohid --verbose
+oohid -c 100000000 -f qlbl -o uuids.txt --check --verbose
 ```
 
 ## Configuration
