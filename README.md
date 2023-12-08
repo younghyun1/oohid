@@ -10,6 +10,11 @@ oohid is a fast and efficient command-line interface (CLI) tool for generating U
 - Check for and remove duplicate UUIDs.
 - Verbose mode for additional output information.
 
+## Characteristics
+- Pretty fast, I'm sure. Uses Rayon for embarassingly parallel tasks, probably some more optimization work to do. SIMD or assembly-level stuff or cache optimization, IDK. ~1 mil/s on my MacBook Pro w. M2 Pro.
+- Formatting options suitable for Python/Rust.
+- For the extra-paranoid (even with 1m UUIDs, the possibility of duplicates is low), duplicate checking.
+
 ## Installation
 To install oohid, ensure you have Rust and Cargo installed on your system. Then run the following command:
 
