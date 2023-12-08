@@ -1,11 +1,11 @@
 [package]
 name = "oohid"
-version = "0.3.3"
+version = "0.3.4"
 edition = "2021"
 license-file = "LICENSE"
 description = "Generates UUIDs on CLI in various formats, very fast, outputs to .txt or stdout."
 homepage = "https://www.linkedin.com/in/younghyun-chi-a60b59a9/"
-repository = "https://github.com/younghyun1/uuid-gen-gui"
+repository = "https://github.com/younghyun1/oohid"
 readme = "README.md"
 
 [profile.release]
