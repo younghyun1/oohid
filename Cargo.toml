@@ -12,16 +12,21 @@ readme = "README.md"
 opt-level = 3
 lto = true
 codegen-units = 1
+debug = false
+incremental = false
+strip = true
+panic = "abort"
 
 [profile.dev]
 debug = true
+panic = "abort"
 
 [dependencies]
-clap = { version = "4.4.11", features = ["derive"] }
-rayon = "1.8.0"
+clap = { version = "4.5.4", features = ["derive"] }
+rayon = "1.10.0"
 
 [dependencies.uuid]
-version = "1.6.1"
+version = "1.8.0"
 features = [
     "v4",                # Lets you generate random UUIDs
     "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs

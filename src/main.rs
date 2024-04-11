@@ -80,7 +80,7 @@ fn generate_uuids(count: u32, format: &str) -> Vec<String> {
 
 #[inline]
 fn format_uuid(uuid: &Uuid, format: &str) -> String {
-    let base_format = uuid.to_string();
+    let base_format: String = uuid.to_string();
     match format {
         "u" => base_format,
         "ul" => format!("{},", base_format),
