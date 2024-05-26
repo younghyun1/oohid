@@ -97,8 +97,7 @@ fn main() -> io::Result<()> {
 fn generate_uuids(count: u32, format: &str) -> Vec<String> {
     (0..count)
         .into_par_iter()
-        .map(|_| Uuid::new_v4())
-        .map(|uuid| format_uuid(&uuid, format))
+        .map(|_| format_uuid(&uuid::Uuid::new_v4(), format))
         .collect()
 }
 
