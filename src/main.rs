@@ -1,32 +1,53 @@
-use clap::Parser;
-use uuid::Uuid;
-use rayon::prelude::*;
 use std::collections::HashSet;
 use std::fs::File;
 use std::io::{self, Write};
 use std::time::Instant;
 
+use clap::Parser;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use uuid::Uuid;
+
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
     // Number of UUIDs to generate
-    #[arg(short, long, default_value_t = 1, help = "Specifies the number of UUIDs to generate.")]
+    #[arg(
+        short,
+        long,
+        default_value_t = 1,
+        help = "Specifies the number of UUIDs to generate."
+    )]
     count: u32,
 
     // Format of the UUIDs
-    #[arg(short, long, default_value = "u", help = "Sets the format of the UUIDs. ('u' for bare, 'ul' for bare w. comma, 'q' for quoted, 'ql' for quoted w. comma, 'qlb' for [] brackets, 'qlbl' for {} brackets)")]
+    #[arg(
+        short,
+        long,
+        default_value = "u",
+        help = "Sets the format of the UUIDs. ('u' for bare, 'ul' for bare w. comma, 'q' for quoted, 'ql' for quoted w. comma, 'qlb' for [] brackets, 'qlbl' for {} brackets)"
+    )]
     format: String,
 
     // Output file
-    #[arg(short, long, help = "Specifies an output file. Prints to stdout if not set.")]
+    #[arg(
+        short,
+        long,
+        help = "Specifies an output file. Prints to stdout if not set."
+    )]
     output: Option<String>,
 
     // Check for duplicates
-    #[arg(long, help = "Goes over initial output to check for duplicates. Fixes silently.")]
+    #[arg(
+        long,
+        help = "Goes over initial output to check for duplicates. Fixes silently."
+    )]
     check: bool,
 
     // Verbose output
-    #[arg(long, help = "Displays benchmarking info, also displays check results if applicable.")]
+    #[arg(
+        long,
+        help = "Displays benchmarking info, also displays check results if applicable."
+    )]
     verbose: bool,
 }
 
@@ -35,7 +56,7 @@ fn main() -> io::Result<()> {
 
     let args: Args = Args::parse();
     let mut formatted_uuids: Vec<String> = generate_uuids(args.count, &args.format);
-    
+
     let (had_duplicates, duplicates_count) = if args.check {
         remove_duplicates(&mut formatted_uuids, &args.format)
     } else {
@@ -57,9 +78,12 @@ fn main() -> io::Result<()> {
     if args.verbose {
         let duration = start.elapsed();
         println!("Time elapsed for UUID generation: {:?}", duration);
-        if args.check{
+        if args.check {
             if had_duplicates {
-                println!("Duplicates were found and replaced. Total duplicates: {}", duplicates_count);
+                println!(
+                    "Duplicates were found and replaced. Total duplicates: {}",
+                    duplicates_count
+                );
             } else {
                 println!("No duplicates were found.");
             }
