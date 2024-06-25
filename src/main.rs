@@ -144,7 +144,7 @@ fn remove_duplicates(uuids: &mut Vec<String>, format: &str) -> (bool, u32) {
 }
 
 #[inline(always)]
-fn format_output(uuids: &[String], format: &str) -> String {
+fn format_output(uuids: &[String], format: &str) -> String {
     match format {
         "qlb" => format!("[\n\t{}\n]", uuids.join("\n\t")),
         "qlbl" => format!("{{\n\t{}\n}}", uuids.join("\n\t")),
