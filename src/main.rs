@@ -93,7 +93,7 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-#[inline]
+#[inline(always)]
 fn generate_uuids(count: u32, format: &str) -> Vec<String> {
     (0..count)
         .into_par_iter()
@@ -101,7 +101,7 @@ fn generate_uuids(count: u32, format: &str) -> Vec<String> {
         .collect()
 }
 
-#[inline]
+#[inline(always)]
 fn format_uuid(uuid: &Uuid, format: &str) -> String {
     let base_format: String = uuid.to_string();
     match format {
@@ -113,7 +113,7 @@ fn format_uuid(uuid: &Uuid, format: &str) -> String {
     }
 }
 
-#[inline]
+#[inline(always)]
 fn remove_duplicates(uuids: &mut Vec<String>, format: &str) -> (bool, u32) {
     let mut unique_uuids = HashSet::new();
     let mut duplicates: u32 = 0;
@@ -143,8 +143,8 @@ fn remove_duplicates(uuids: &mut Vec<String>, format: &str) -> (bool, u32) {
     (duplicates > 0, duplicates)
 }
 
-#[inline]
-fn format_output(uuids: &[String], format: &str) -> String {
+#[inline(always)]
+fn format_output(uuids: &[String], format: &str) -> String {
     match format {
         "qlb" => format!("[\n\t{}\n]", uuids.join("\n\t")),
         "qlbl" => format!("{{\n\t{}\n}}", uuids.join("\n\t")),
