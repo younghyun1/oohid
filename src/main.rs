@@ -49,16 +49,21 @@ struct Args {
         help = "Displays benchmarking info, also displays check results if applicable."
     )]
     verbose: bool,
+
+    // uuidv7
+    #[arg(long, help = "Generates UUIDv7 instead of UUIDv4.")]
+    v7: bool,
 }
 
 fn main() -> io::Result<()> {
     let start = Instant::now();
 
     let args: Args = Args::parse();
-    let mut formatted_uuids: Vec<String> = generate_uuids(args.count, &args.format);
+
+    let mut formatted_uuids: Vec<String> = generate_uuids(args.count, &args.format, args.v7);
 
     let (had_duplicates, duplicates_count) = if args.check {
-        remove_duplicates(&mut formatted_uuids, &args.format)
+        remove_duplicates(&mut formatted_uuids, &args.format, args.v7)
     } else {
         (false, 0)
     };
@@ -94,10 +99,17 @@ fn main() -> io::Result<()> {
 }
 
 #[inline]
-fn generate_uuids(count: u32, format: &str) -> Vec<String> {
+fn generate_uuids(count: u32, format: &str, v7: bool) -> Vec<String> {
     (0..count)
         .into_par_iter()
-        .map(|_| format_uuid(&uuid::Uuid::new_v4(), format))
+        .map(|_| {
+            let uuid = if v7 {
+                uuid::Uuid::now_v7()
+            } else {
+                uuid::Uuid::new_v4()
+            };
+            format_uuid(&uuid, format)
+        })
         .collect()
 }
 
@@ -114,7 +126,7 @@ fn format_uuid(uuid: &Uuid, format: &str) -> String {
 }
 
 #[inline]
-fn remove_duplicates(uuids: &mut Vec<String>, format: &str) -> (bool, u32) {
+fn remove_duplicates(uuids: &mut Vec<String>, format: &str, v7: bool) -> (bool, u32) {
     let mut unique_uuids = HashSet::new();
     let mut duplicates: u32 = 0;
 
@@ -132,7 +144,8 @@ fn remove_duplicates(uuids: &mut Vec<String>, format: &str) -> (bool, u32) {
     // Generate and add new UUIDs for each duplicate removed
     for _ in 0..duplicates {
         loop {
-            let new_uuid = format_uuid(&Uuid::new_v4(), format);
+            let new_id = if v7 { Uuid::now_v7() } else { Uuid::new_v4() };
+            let new_uuid = format_uuid(&new_id, format);
             if unique_uuids.insert(new_uuid.clone()) {
                 uuids.push(new_uuid);
                 break;
