@@ -1,6 +1,7 @@
 use std::collections::HashSet;
 use std::fs::File;
 use std::io::{self, Write};
+use std::str::FromStr;
 use std::time::Instant;
 
 use clap::Parser;
@@ -53,12 +54,29 @@ struct Args {
     // uuidv7
     #[arg(long, help = "Generates UUIDv7 instead of UUIDv4.")]
     v7: bool,
+
+    // Output UUIDs as integers
+    #[arg(long, help = "Prints the UUIDs as u128 of the given UUID argument.")]
+    to_int: Option<String>,
 }
 
 fn main() -> io::Result<()> {
     let start = Instant::now();
 
     let args: Args = Args::parse();
+
+    match args.to_int {
+        Some(input_str) => match uuid::Uuid::from_str(input_str.as_ref()) {
+            Ok(input_uuid) => {
+                println!("{}", input_uuid.as_u128());
+                return Ok(());
+            }
+            Err(e) => {
+                return Err(io::Error::new(io::ErrorKind::InvalidInput, e));
+            }
+        },
+        None => (),
+    }
 
     let mut formatted_uuids: Vec<String> = generate_uuids(args.count, &args.format, args.v7);
 
