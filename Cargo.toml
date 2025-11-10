@@ -1,6 +1,6 @@
 [package]
 name = "oohid"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 license-file = "LICENSE"
 description = "Generates UUIDs on CLI in various formats, very fast, outputs to .txt or stdout."
@@ -23,5 +23,5 @@ panic = "abort"
 
 [dependencies]
 uuid = { version = "1.18.1", features = ["v4", "v7", "fast-rng"]}
-clap = { version = "4.5.51", default-features = false, features = ["std", "derive"] }
+clap = { version = "4.5.51", default-features = false, features = ["std", "derive", "help"] }
 rayon = "1.11.0"
